@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container_flauid" id="app">
+        <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading text-center">
+                    <h2>学生个人成绩查询</h2>
+                </div>
+                <div class="form-group">
+                    <label for="stuId">请输入身份号</label>
+                    <input class="form-control" id="stuId" placeholder="测试时间" name="stuId">
+                </div>
+                 <div class="text-center">
+                    <button type="submit" class="btn btn-default " id="submit">查询</button>
+                </div>
+                <table class="table" id="table1">
+                    <th>
+                        项目类型
+                    </th>
+                    <th>
+                        测试成绩
+                    </th>
+                    <th>
+                        测试时间
+                    </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var str = [
+        '身高(厘米)',
+        '体重(千克)',
+        '肺活量(毫升)',
+        '坐位体前屈(厘米)',
+        '50米(秒)',
+        '800米(秒)',
+        '1000米(秒)',
+        '仰卧起坐(个)',
+        '引体向上(个)',
+        ]
+    $('button').click((e) => {
+        var id = $('#stuId').val()
+        $.get(`http://114.115.140.5:3000/nsph-record/_by?ID=${id}`, (e) => {
+            let result = e.records
+            $('#table1 tbody tr:not(:first)').empty()
+            for (let item of result) {
+                let date = new Date(item.when)
+                date = date.toLocaleString()
+                $('#table1 tbody').append('<tr></tr>')
+                $('#table1 tbody tr:last').append(`<td> ${str[item.term-1] ? str[item.term-1] : '未知项目'} </td>`)
+                $('#table1 tbody tr:last').append(`<td> ${item.value} </td>`)
+                $('#table1 tbody tr:last').append(`<td> ${date} </td>`)
+            }
+        })
+    })
+    </script>
+</body>

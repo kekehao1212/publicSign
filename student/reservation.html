@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container_flauid" id="app">
+        <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+            <h2 class="text-center">学生体测预约</h2>
+            <table class="table table-bordered table-striped" id="table1">
+                <th>
+                    体测编号
+                </th>
+                <th>
+                    时间
+                </th>
+                <th>
+                    测试老师
+                </th>
+                <th>
+                    计划人数
+                </th>
+                <th></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+    var reservation;
+    $.get('http://114.115.140.5:3000/schedule', (e) => {
+        console.log(e)
+        reservation = e.results
+        for (let item of reservation) {
+            console.log(`<td> ${item.when} </td> <td> ${item.operator} </td> <td> ${item.limit}</td> <td><button class='btn btn-default' id = #${item.schId}>预约</button></td><tr>`)
+            $('#table1 tbody').append('<tr></tr>')
+            $('#table1 tbody tr:last').append(`<td> ${item.schId} </td>`)
+            var date = new Date(item.when)
+            date = date.toLocaleString()
+            $('#table1 tbody tr:last').append(`<td> ${date} </td>`)
+            $('#table1 tbody tr:last').append(`<td> ${item.operator} </td>`)
+            $('#table1 tbody tr:last').append(`<td> ${item.limit} </td>`)
+            $('#table1 tbody tr:last').append(`<td><button class='btn btn-default btn-xs' id=${item.schId}>预约</button></td>`)
+        }
+        $('button').click((e) => {
+            $.ajax({
+                url: 'http://114.115.140.5:3000/sched-attendence',
+                data:{
+                    schedId: e.target.id,
+                    who: 370911199702101731
+                },
+                type:'post',
+                success: () => {
+                    window.location.href = "../shared/successOperation.html"
+                },
+                error: () => {
+                    alert('您已经参加过预约')
+                }
+            })
+        })
+    })
+});
+</script>
+
+</html>

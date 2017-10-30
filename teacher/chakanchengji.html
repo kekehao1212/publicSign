@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    th {
+        padding: 4px;
+    }
+    td {
+        padding: 4px;
+    }
+    .hidden_ele {
+        display: none;
+    }
+
+    .non_padding {
+        padding: 0;
+    }
+    .pageInput {
+        width: 30px;
+    }
+    .co{
+        width: auto;
+    }
+    .panel {
+        width: 640px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="co non_padding" id="app">
+        <div class="non_padding col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading text-center">
+                    <h2>学生成绩查询</h2>
+                </div>
+                <table class="table" id="table1">
+                    <th>
+                        学生身份证
+                    </th>
+                    <th>
+                        身高(厘米)
+                    </th>
+                    <th>
+                        体重(千克)
+                    </th>
+                    <th>
+                        肺活量(毫升)
+                    </th>
+                    <th>
+                        坐位体前屈(厘米)
+                    </th>
+                    <th>
+                        50米(秒)
+                    </th>
+                    <th>
+                        800米(秒)
+                    </th>
+                    <th>
+                        1000米(秒)
+                    </th>
+                    <th>
+                        仰卧起坐(个)
+                    </th>
+                    <th>
+                        引体向上(个)
+                    </th>
+                    </tr>
+                </table>
+                <nav aria-label="...">
+  <ul class="pager">
+    <li id="previous"><a href="#" id="previous"><span aria-hidden="true">&larr;</span> 上一页</a></li>
+    <li id="next"><a href="#" id="next">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+    <div>
+        <span id="now">第1页</span>
+    <span>前往第<input type="text" class="pageInput">页 <button class="btnPage btn btn-sm" id = "toPage">跳转</button></span>
+    </div>
+  </ul>
+</nav>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    function fixup(vs) {
+        let holes = { '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true};
+        for (const v of vs) {
+            holes[v.term] = false;
+        }
+
+        for (const term in holes) {
+            if (holes[term]) {
+                vs.push({ term: term, value: '暂无' });
+            }
+        }
+    }
+    var sum;
+    var now;
+
+    function toPage(i) {
+        if(i < 0 || i > sum)
+            return
+        $.get(`http://114.115.140.5:3000/nsph-record/_groupby/target?START=${i * 12}&PSIZE=12`, (e) => {
+            let result = e
+            $('#table1 tbody tr:not(:first)').empty()
+            for (let key in result) {
+                let value = result[key];
+                $('#table1 tbody').append('<tr></tr>')
+                $('#table1 tbody tr:last').append(`<td> ${key} </td>`)
+                let i = 0;
+
+                fixup(value);
+                value.sort((l, r) => {
+                    return l.term - r.term;
+                });
+
+                for (let ii of value) {
+                    i = i + 1;
+                    if (i === 10)
+                        break;
+                    $('#table1 tbody tr:last').append(`<td> ${ii.value} </td>`)
+                }
+            }
+        })
+    }
+    $('document').ready(() => {
+        $.get('http://114.115.140.5:3000/nsph-record/_groupby/target/_count',  (e) => {
+            sum = Math.ceil(e.count/12)
+            now = 0
+            toPage(now)
+            $('span[id = now]').text(`第${now + 1}页/共${sum}页`)
+        })
+        $('a[id = next]').click(() => {
+            if (now == sum) {
+                return
+            }
+            toPage(now + 1)
+            now = now + 1
+            $('span[id = now]').text(`第${now + 1}页/共${sum}页`)
+        })
+        $('a[id = previous]').click(() => {
+            if (now == 0) {
+                return
+            }
+            toPage(now - 1)
+            now = now - 1
+            $('span[id = now]').text(`第${now + 1}页/共${sum}页`)
+        })
+        $('#toPage').click((e) => {
+            now = $('.pageInput').val() -1
+            toPage(now)
+            $('span[id = now]').text(`第${now + 1}页/共${sum}页`)
+        })
+    })
+    </script>
+</body>

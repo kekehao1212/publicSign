@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+    .btn_ele{
+        padding: .375rem .55rem;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+            <h2 class="text-center">免测申请审核</h2></div>
+        <table class="table table-bordered table-striped" id="table1">
+            <th class="">学生身份证号
+            </th>
+            <th class="">
+                申请原因
+            </th>
+            <th>
+            </th>
+            </tr>
+        </table>
+    </div>
+    </div>
+    <script type="text/javascript">
+    $('document').ready(() => {
+        $.get('http://114.115.140.5:3000/test-free-app/_by?PENDING=1', (e) => {
+            console.log(e)
+            let results = e.results
+            for (let item of results) {
+                $('#table1 tbody').append('<tr></tr>')
+                $('#table1 tbody tr:last').append(`<td> ${item.who} </td>`)
+                $('#table1 tbody tr:last').append(`<td> ${item.reason} </td>`)
+                $('#table1 tbody tr:last').append(`<td><button class='btn btn-primary btn-xs btn_ele' id=a_${item.tfAppId}>同意</button><button class='btn btn-danger btn-xs btn_ele' id=r_${item.tfAppId}>拒绝</button></td>`)
+            }
+            $('button').click((e) => {
+                console.log(e)
+                if (e.target.id[0] == 'a') {
+                    let id = e.target.id.slice(2, e.target.id.length)
+                    console.log(id)
+                    $.post(`http://114.115.140.5:3000/test-free-app/_accept/${id}`, {
+                        operator: 0
+                    }, () => {
+                        window.location.reload()
+                    })
+                } else {
+                    let id = e.target.id.slice(2, e.target.id.length)
+                    $.post(`http://114.115.140.5:3000/test-free-app/_reject/${id}`, {
+                        operator: 0
+                    }, () => {
+                    	window.location.reload()
+                    })
+                }
+            })
+        })
+    })
+    </script>
+</body>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-6 col-sm-6  col-md-offset-3 col-sm-offset-3">
+            <h2 class="text-center">学生成绩录入</h2>
+            <form>
+                <div class="form-group">
+                    <label for="stuId">学生身份证号</label>
+                    <input class="form-control" id="stuId" placeholder="学生身份证号" value="" name="stuId">
+                </div>
+                <div class="form-group">
+                    <label for="testTeacher">测试老师</label>
+                    <input class="form-control" id="testTeacher" placeholder="测试老师" name="operator" aria-describedby="helpBlock">
+                    <span id="helpBlock" class="help-block">测试老师请填0</span>
+                </div>
+                <div class="form-group">
+                    <label for="testTime">测试时间</label>
+                    <input class="form-control" id="testTime" placeholder="测试时间" name="when">
+                </div>
+                <div class="form-group hidden_ele">
+                    <label for="testLang">测试地点经度</label>
+                    <input class="form-control" id="testLang" placeholder="测试地点经度" name="longitude">
+                </div>
+                <div class="form-group hidden_ele">
+                    <label for="testLati">测试地点纬度</label>
+                    <input class="form-control" id="testLati" placeholder="测试地点纬度" name="latitude">
+                </div>
+                <div class="form-group">
+                    <label for="testItem">测试项目</label>
+                    <select class="form-control" name="term" id="term">
+                        <option value="1" class="form-control">身高(厘米)</option>
+                        <option value="2" class="form-control">体重(千克)</option>
+                        <option value="3" class="form-control">肺活量(毫升)</option>
+                        <option value="4" class="form-control">坐位体前屈(厘米)</option>
+                        <option value="5" class="form-control">50米(秒)</option>
+                        <option value="6" class="form-control">800米(秒)</option>
+                        <option value="7" class="form-control">1000米(秒)</option>
+                        <option value="8" class="form-control">仰卧起坐(个)</option>
+                        <option value="9" class="form-control">引体向上(个)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="testTime">成绩</label>
+                    <input class="form-control" id="testTime" placeholder="测试成绩" name="value">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-default btn-lg" id="submit">录入</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+var str = []
+$('form').submit((e) => {
+    e.preventDefault()
+    let id = $("input[name = 'stuId']").val()
+    let operator = $("input[name = 'operator']").val()
+    let when = $("input[name = 'when']").val()
+    let longitude = $("input[name = 'longitude']").val()
+    let latitude = $("input[name = 'latitude']").val()
+    let term = $("#term option:selected").val()
+    let value = $("input[name = 'value']").val()
+    console.log(term)
+    var obj = {
+    	target: id,
+        operator: operator,
+        when: when,
+        longitude: '0',
+        latitude: '0',
+        term: term,
+        value: value
+    }
+    console.log(obj)
+    $.post('http://114.115.140.5:3000/nsph-record', obj, () => {
+        console.log('success')
+        window.location.href = "../shared/successOperation.html"
+    })
+})
+</script>
+
+</html>
+<!-- http://114.115.140.5:3000/nsph-record -->

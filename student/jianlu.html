@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+
+    .cc {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .bb {
+        margin: 20px;
+    }
+
+    #h4 {
+        line-height: 35px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2 text-center">
+            <h2 class="text-center">学生检录</h2>
+            <h4 class="text-center" id="h4"></h4>
+            <div class="cc text-center">
+                <img src="./src/2934349b033b5bb571dc8c5133d3d539b600bc12.jpg" alt="" class="image hidden_ele" width="200px;" height="200px;">
+                <button class="btn btn-default bb hidden_ele">获取检录二维码</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $('document').ready(() => {
+        $.get('http://114.115.140.5:3000/schedule/_by?ID=370911199702101731', (e) => {
+            console.log(e.results[0])
+            if (e.results[0]) {
+                var date = new Date(e.results[0].when)
+                $('h4').text(`您已参加测试编号为${e.results[0].schId},测试时间为${date.toLocaleString()}的预约,请及时检录`)
+                $(".btn").removeClass("hidden_ele")
+                $("img").removeClass("hidden_ele")
+            } else {
+                $('h4').text(`尚未完成预约，请先预约测试`)
+            }
+        })
+    })
+    $('button').click(() => {
+        $('.image').toggle()
+    })
+    </script>
+</body>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-6 col-sm-6  col-md-offset-3 col-sm-offset-3">
+            <h2 class="text-center">学生注册</h2>
+            <form>
+                <div class="form-group">
+                    <label for="stuSchool">请选择学校</label>
+                    <select class="form-control" name="stuSchool" id="stuSchool">
+                        <option value="清华大学" class="form-control">清华大学</option>
+                        <option value="北京大学" class="form-control">北京大学</option>
+                        <option value="华中科技大学" class="form-control">华中科技大学</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stuName">学生姓名</label>
+                    <input class="form-control" id="stuName" placeholder="学生姓名" value="" name="stuName">
+                </div>
+                <div class="form-group">
+                    <label for="stuId">学生身份证</label>
+                    <input class="form-control" id="stuId" placeholder="学生身份证" name="stuId" value="">
+                </div>
+                <div class="form-group">
+                    <label for="department">专业</label>
+                    <input class="form-control" id="department" placeholder="专业" name="department" value="">
+                </div>
+                <div class="form-group">
+                    <label for="stuClass">班级</label>
+                    <input class="form-control" id="stuClass" placeholder="班级" name="stuClass" value="">
+                </div>
+                <div class="form-group">
+                    <label for="stuYear">年级</label>
+                    <input class="form-control" id="stuYear" placeholder="年级" name="stuYear" value="">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-default btn-lg" id="submit">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $('form').submit((e) => {
+        e.preventDefault()
+        let obj = {
+            name: $("input[name = 'stuName']").val(),
+            id: $("input[name = 'stuId']").val(),
+            college: $("#stuSchool option:selected").val(),
+            department: $("input[name = 'department']").val(),
+            grade: $("input[name = 'stuYear']").val(),
+            klass: $("input[name = 'stuClass']").val()
+        }
+        console.log(obj)
+        $.ajax({
+            url: 'http://114.115.140.5:3000/student',
+            type: 'post',
+            data: obj,
+            success: () => {
+                window.location.href = "../shared/successOperation.html"
+            },
+            error: () => {
+                alert('注册失败')
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>

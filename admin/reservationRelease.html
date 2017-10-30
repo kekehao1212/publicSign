@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="width=device-width, initial-scale=1" name="viewport" charset="utf-8"></meta>
+    <title>
+    </title>
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+    </script>
+    <style type="text/css">
+    .hidden_ele {
+        display: none;
+    }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
+            <h2 class="text-center">
+                    发布体测预约计划
+                </h2>
+            <form>
+                <div class="form-group">
+                    <label for="time">
+                        体测时间
+                    </label>
+                    <input class="form-control" id="time" name="when" placeholder="体测时间" value="">
+                    </input>
+                </div>
+                <div class="form-group">
+                    <label for="testTeacher">
+                        测试老师
+                    </label>
+                    <input class="form-control" id="testTeacher" name="operator" placeholder="测试老师" aria-describedby="helpBlock">
+                    <span id="helpBlock" class="help-block">测试老师请填0</span>
+                    </input>
+                </div>
+                <div class="form-group">
+                    <label for="limit">
+                        计划人数
+                    </label>
+                    <input class="form-control" id="limit" name="limit" placeholder="计划人数">
+                    </input>
+                </div>
+                <div class="form-group">
+                    <label for="description">
+                        补充说明
+                    </label>
+                    <textarea class="form-control" id="description" name="description" rows="3">
+                    </textarea>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-default" id="submit" type="submit">
+                        录入
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+        $('form').submit((e) => {
+            e.preventDefault()
+            let when = $("input[name = 'when']").val()
+            let operator = $("input[name = 'operator']").val()
+            let limit = $("input[name = 'limit']").val()
+            let description = $("input[name = 'description']").val()
+            $.post('http://114.115.140.5:3000/schedule', {
+                operator: operator,
+                when: when,
+                limit: limit,
+                description: description
+            }, () => {
+                console.log('success')
+                window.location.href = "../shared/successOperation.html"
+            })
+        })
+</script>
+
+</html>

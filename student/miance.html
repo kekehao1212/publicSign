@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../depend/bootstrap.min.css">
+    <script type="text/javascript" src="../depend/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center">免测申请</h2>
+        <form>
+            <div class="form-group">
+                <label for="stuId">学生身份证号</label>
+                <input class="form-control" id="stuId" placeholder="学生身份证号" value="" name="target">
+            </div>
+            <div class="form-group">
+                <label for="reason">申请理由</label>
+                <textarea class="form-control" id="reason" placeholder="申请理由" name="reason" rows="10"> </textarea>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-default btn-lg" id="submit">提交申请</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+$('form').submit((e) => {
+    e.preventDefault()
+    $.post('http://114.115.140.5:3000/test-free-app', {
+        who: ('#stuId').val(),
+        reason: $('#reason').val()
+    }, (e) => {
+        console.log(e)
+        window.location.href = "../shared/successOperation.html"
+    })
+})
+</script>
+
+</html>
